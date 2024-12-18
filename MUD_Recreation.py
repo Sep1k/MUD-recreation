@@ -25,6 +25,7 @@ liiga_suur_ese = ["karu", "puu", "lind", "hiir", "haud", "kivi"]
 
 #oluline kraam mis ei sobi kuskile---------------------------------------------------
 koht = aas
+koht2 = []
 kohad = [maja, surnuaed, tiik, aas, põld]
 suva = 0
 damage = 0
@@ -37,36 +38,39 @@ damage = 0
 #sisend = input(": ")    #Püha algus ksureale
 
 def game_brain(sisend):
+    global player1, karu, lind, hiir, haavatu, koht, tasku
+    global maja, surnuaed, tiik, mets, aas, põld
     sisend = sisend.lower()
     sisend = sisend.split()
 
     
     if sisend[0] == "go":
         if sisend[1] == "maja":
-            return "Saabusid majja"
             koht = maja
+            return "Saabusid majja"
         if sisend[1] == "surnuaed":
-            return "Saabusid surnuaeda"
             koht = surnuaed
+            return "Saabusid surnuaeda"
         if sisend[1] == "tiik":
-            return "Saabusid tiigi äärde"
             koht = tiik
+            return "Saabusid tiigi äärde"
         if sisend[1] == "aas":
-            return "Saabusid aasale"
             koht = aas
+            return "Saabusid aasale"
         if sisend[1] == "põld":
-            return "Saabusid põllule"
             koht = põld
+            return "Saabusid põllule"
         if sisend[1] == "mets":
-            return "Saabusid metsa"
             koht = mets
+            return "Saabusid metsa"
 
     #scan ----------------------------------------------------    
 
     elif sisend[0] == "scan":
-        for paik in koht:
-            koht2 = ( str(koht) + "," + str(koht[paik]))
-        return koht
+        koht2.clear()  # Clear previous results before appending new ones
+        for item in koht:  # Iterate directly over list items
+            koht2.append(str(item))
+        return ",".join(koht2)
 
     #shoot-----------------------------------------------        
 
@@ -81,18 +85,25 @@ def game_brain(sisend):
             if sisend[1] == "karu":
                 karu -= damage
                 haavatu = karu
+                
             if sisend[1] == "hiir":
                 hiir -= damage
                 haavatu = hiir
             if sisend[1] == "lind":
                 lind -= damage
                 haavatu = lind
+            
+            
             if haavatu <= 0:
-                return(sisend[1] + " on surnud.")
-                koht += [(str(sisend[1]) + "liha")]
-                koht += [sisend[1] + "korjus"]
+                koht.append(str(sisend[1]) + "liha")
+                koht.append(sisend[1] + "korjus") 
                 koht.remove(sisend[1])
-        
+                return sisend[1] + " on surnud."
+            else:
+                return str(sisend[1]) + ": müöö"
+
+                
+        return "Seda sihtmärki pole siin."
 
             
 
@@ -108,12 +119,14 @@ def game_brain(sisend):
             if sisend[1] in koht:
                 tasku += [sisend[1]]
                 koht.remove(sisend[1])
+                return "Taskus on nüüd" + sisend[1]
             
             elif "liha" in sisend[1]:
                 for sõna in koht:
                     if sõna == sisend[1]:
                         tasku += [sisend[1]]
                         koht.remove(sisend[1])
+                        return "Taskus on nüüd" + sisend[1]
                     
                         
                       
@@ -173,13 +186,12 @@ def game_brain(sisend):
             #print(f"Sisestasit midagi valesti: {e}")
         
 
-
 def send_message():
     sisend = input_var.get().strip()
     if sisend:
         # Display user message in chat area
         chat_area.config(state='normal')
-        chat_area.insert(tk.END, f"User: {sisend}\n", "user_tag")
+        chat_area.insert(tk.END, f" {sisend}\n", "user_tag")
         chat_area.config(state='disabled')
         
         # Clear input field
@@ -190,8 +202,9 @@ def send_message():
 
         # Display reply in chat area
         chat_area.config(state='normal')
-        chat_area.insert(tk.END, f"Action: {reply}\n", "bot_tag")
+        chat_area.insert(tk.END, f" {reply}\n", "bot_tag")
         chat_area.config(state='disabled')
+        scroll_to_bottom()
         
 def on_enter_key(event):
     send_message()
@@ -246,7 +259,7 @@ hint_label = ttk.Label(hint_frame, text="Keywords / Commands:", font=("Arial", 1
 hint_label.pack(pady=(0,10))
 
 # Example keywords
-keywords = ["hello", "bye", "help", "info"]
+keywords = ["scan", "inv", "pick <item>", "drop <item>", "look", "go <place>", "shoot <target>", "eat <item>", "healt"]
 
 for kw in keywords:
     kw_label = ttk.Label(hint_frame, text=kw, font=("Arial", 10))
@@ -261,7 +274,10 @@ rule1_label.pack(anchor="w")
 rule2_label = ttk.Label(rules_frame, text='Rule 2: If user says "bye" → respond with farewell.')
 rule2_label.pack(anchor="w")
 
+# Auto-scroll chat area to bottom when new content is added
+def scroll_to_bottom():
+    chat_area.see("end")
+    chat_area.update_idletasks()
+
 # Set up the main event loop
 root.mainloop()
-
-
