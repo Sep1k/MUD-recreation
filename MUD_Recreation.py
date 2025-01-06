@@ -1,5 +1,6 @@
-import tkinter as tk
+import tkinter as tk                
 from tkinter import ttk
+
 import random
 #Nimi1 = input("sisesta oma nimi")
 
@@ -14,20 +15,24 @@ haavatu = 0
 #kohad-------------------------------------------------------------------------------
 maja = ["kook", "õun","hiir", "tool"]
 surnuaed = ["haud", "kont", "kont", "puu"]
-tiik = ["kala", "kala", "kala", "pilliroog"]
-mets = ["seen", "puu", "puu", "seen", "kivi", "puu"]
+tiik = ["kala", "kala", "kala", "pilliroog" "puhkpüss"]
+mets = ["seen", "puu", "puu", "seen", "kivi", "puu", "nuii"]
 aas = ["lill", "lill", "lill", "seen"]
 põld = ["nisu", "lind", "karu", "nisu", "nisu", "seen"]
 kirik = ["piibel", "küünal", "küünal"]
-kelder = ["luukere", "kett", "kett", "pealuu", "kont"]
-pööning = ["Hallitusseen", "lamp"]
+kelder = ["luukere", "kett", "kett", "piits", "pealuu", "kont"]
+pööning = ["hallitusseen", "lamp", "kalasnikov","kuulid_x20"]
 
 mindavad_kohad = ["maja", "surnuaed", "tiik", "aas", "põld", "mets"]
 #taskud--------------------------------------
 tasku = []
 liiga_suur_ese = ["karu", "puu", "haud", "kivi"]
+lastavad = ["karu", "hiir", "lind", "lamp"]
 
-#oluline kraam mis ei sobi kuskile---------------------------------------------------
+
+
+            
+#oluline kraam mis ei sobi kuskile--------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------
 koht = aas
 koht2 = []
 kohad = [maja, surnuaed, tiik, aas, põld]
@@ -36,18 +41,22 @@ damage = 0
 poise = 0
 poises = 0
 poiseh = 0
+weapon = "käed"
+weapons = ["kalasnikov", "puhkpüss", "nuii", "piits" ]
+kordaja = 1
 
 
 
-# Käsud-------------------------------------------._.----------------
+# Käsud-------------------------------------------._.-------------------------------------------------------------------------------------------------------------------------------------------- --------
 #while True: #kõige süda. (:
     #try:
     #def käsud(sisend):
 #sisend = input(": ")    #Püha algus ksureale
 
 def game_brain(sisend):
-    global player1, karu, lind, hiir, haavatu, koht, tasku, mindavad_kohad, poise, healt, poises, poiseh
+    global player1, karu, lind, hiir, haavatu, koht, tasku, mindavad_kohad, poise, kordaja, poises, poiseh, damage, weapon
     global maja, surnuaed, tiik, mets, aas, põld, kirik, kelder, pööning
+    
     sisend = sisend.lower()
     sisend = sisend.split()
     
@@ -67,12 +76,12 @@ def game_brain(sisend):
         
     poise -= poises
     poise = 0
-#random message-------------------------------------------------------
+#random message----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- --
     
     arv = random.randint(1,3)
 
     
-#ränndamine------------------------------------------------------------    
+#ränndamine----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -------------    
     if sisend[0] == "go":
         if sisend[1] == "maja":
             if sisend[1] in mindavad_kohad:
@@ -131,7 +140,7 @@ def game_brain(sisend):
         eksimise_teated = ["Sa ei leidnud teed kuhugile!", "Eksinud! Proovi teist teed.", "See tee on suletud.", "Sinna ei saa praegu minna."]
         return random.choice(eksimise_teated)
 
-    #scan ----------------------------------------------------    
+    #scan -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------    
 
     elif sisend[0] == "scan":
         koht2.clear()  
@@ -140,47 +149,80 @@ def game_brain(sisend):
         skannimise_teated = [",".join(koht2), "Näed järgmisi asju: " + ",".join(koht2), "Siin on: " + ",".join(koht2), "Ümberringi on: " + ",".join(koht2)]
         return random.choice(skannimise_teated)
 
-    #shoot-----------------------------------------------        
+    #shoot-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------        
 
-    elif sisend[0] == "shoot":
-        suva = random.randint(1, 6)
-        if sisend[1] in koht:
-            if not suva == 4:
-                damage = 20
-            else:
-                damage = 100
+    elif sisend[0] == "atc" or sisend[0] == "attack" or sisend[0] == "shoot":
+        arvk = 0
+        if weapon == "käead":
+            damage = 10
+            kordaja = 2
+        elif weapon == "kalasnikov":
+            damage = 20
+            kordaja = 1
             
-            if sisend[1] == "karu":
-                karu -= damage
-                haavatu = karu
+            for i, item in enumerate(tasku):
+                if item[:8] == "kuulid_x":
+                    tasku[i] = "kuulid_x" + str(int(item[8:]) - 1)
+                    arvk = 1  
                 
-            if sisend[1] == "hiir":
-                hiir -= damage
-                haavatu = hiir
-            if sisend[1] == "lind":
-                lind -= damage
-                haavatu = lind
-            
-            
-            if haavatu <= 0:
-                koht.append(str(sisend[1]) + "liha")
-                koht.append(sisend[1] + "korjus") 
-                koht.remove(sisend[1])
-                surma_teated = [sisend[1] + " on surnud.", sisend[1] + " langes surnult maha.", "Tabamus oli surmav " + sisend[1] + "-le", sisend[1] + " ei elanud seda üle"]
-                return random.choice(surma_teated)
-            else:
-                haavatud_teated = [str(sisend[1]) + ": müöö", str(sisend[1]) + " karjatas valust", str(sisend[1]) + " sai pihta", str(sisend[1]) + " on haavatud"]
-                return random.choice(haavatud_teated)
+            if "kuulid_x0" in tasku:
+                tasku.remove("kuulid_x0")
+            if arvk == 0:
+                kuulitu_teated = ["Pole kuule, mida lasta", "Kuulid puuduvad, mida lasta", "Relv ei tööta"]
+                return random.choice(kuulitu_teated)
+                
+        elif weapon == "puhkpüss" or weapon == "poise":
+            damage = 5
+            poises = 15
+            poiseh = 5
+        elif weapon == "nuii":
+            damage = 100
+            kordaja = 5
 
-        mööda_teated = ["Seda sihtmärki pole siin.", "Ei näe sellist sihtmärki.", "Kuhu sa küll sihid?", "Sihtmärk puudub."]
-        return random.choice(mööda_teated)
-
-    #Korjesüsteem----------------------------------------------        
+        if sisend[1] in koht:
+            if sisend[1] in lastavad:
+                suva = random.randint(1, 9)                                                                  #shoot______________________________
+                if suva == 8:
+                    damage = damage * 2
+                
+                if sisend[1] == "karu":
+                    karu -= damage
+                    haavatu = karu
+                        
+                if sisend[1] == "hiir":
+                    hiir -= damage
+                    haavatu = hiir
+                if sisend[1] == "lind":
+                    lind -= damage
+                    haavatu = lind
+                    
+                
+                if haavatu <= 0:
+                    koht.append(str(sisend[1]) + "liha")
+                    koht.append(sisend[1] + "korjus") 
+                    koht.remove(sisend[1])
+                    surma_teated = [sisend[1] + " on surnud.", sisend[1] + " langes surnult maha.", "Tabamus oli surmav " + sisend[1] + "-le", sisend[1] + " ei elanud seda üle"]
+                    return random.choice(surma_teated)
+                else:
+                    haavatud_teated = [str(sisend[1]) + ": müöö", str(sisend[1]) + " karjatas valust", str(sisend[1]) + " sai pihta", str(sisend[1]) + " on haavatud"]
+                    return random.choice(haavatud_teated) 
+        if sisend[1] in koht:  
+            elutute_esemete_teated = [sisend[1]+ " on nüüd auk sees", sisend[1] + " on nüüd katki"]
+            return random.choice(elutute_esemete_teated)
+        else:
+            mööda_teated = ["kuul lendas mööda", "käis lihtsalt pauk", "Peale ehmatust avastasid, et käis lihtsalt pauk"]
+            return random.choice(mööda_teated)
+    #Korjesüsteem---------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------        
 
     elif sisend[0] == "pick":
         if len(tasku) == 10:
             täis_teated = ["Taskud on täis.", "Ei mahu enam midagi taskusse.", "Sul pole ruumi.", "Tasku ajab üle."]
             return random.choice(täis_teated)
+        elif sisend[1] in weapons:
+            weapon = sisend[1]
+            koht.remove(sisend[1])
+            relva_teated = ["Omades nüüd Vägevat relva, täitub su keha raevuga", "Oled nüüd relvastatud", "Oled nüüd võitmatu, Äkki", ""]
+            return random.choice(relva_teated)
         elif sisend[1] in liiga_suur_ese:
             raske_teated = ["Ese on liiga raske.", "Ei jõua seda tõsta.", "See on liiga suur.", "Ei suuda seda kaasa võtta."]
             return random.choice(raske_teated)
@@ -200,12 +242,31 @@ def game_brain(sisend):
                         koht.remove(sisend[1])
                         liha_teated = ["Taskus on nüüd " + sisend[1], "Korjasid " + sisend[1] + " üles", "Võtsid " + sisend[1] + " kaasa", sisend[1] + " on nüüd sinu oma"]
                         return random.choice(liha_teated)
+            elif "kuulid" in sisend[1]:
+                kordus = -1
+                kuuli_teated = ["Oled nüüd valmis laskma", "lõpuks saad oma relva kasutusele panna", "Sull on nüüd laskemoona "]
+                
+                for itam in koht:
+                    
+                    
+                    if "kuulid" in itam:
+                        tasku += [koht[int(kordus + 1)]]
+                        koht.remove(koht[kordus + 1])
                         
-    #maha viskamis süsteem--------------------------------------
+                        return random.choice(kuuli_teated)
+                    kordus += 1
+
+                        
+    #maha viskamis süsteem-------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------
                             
     elif sisend[0] == "drop":
         
-        if sisend[1] == "nisu" or sisend[1] == "õun" or sisend[1] == "kont" or sisend[1] == "kook" or sisend[1] == "lill": 
+        if sisend[1] in weapons:
+            koht += [sisend[1]]
+            weapon = "käead"
+            relva_viskamise_teated = ["Pole seda relva enam vaja", "Viskasid " + sisend[1] + " minema", sisend[1] + " on nüüd maas", "Loobusid esemest " + sisend[1]]
+            return random.choice(relva_viskamise_teated)
+        elif sisend[1] == "nisu" or sisend[1] == "õun" or sisend[1] == "kont" or sisend[1] == "kook" or sisend[1] == "lill": 
             koht += [sisend[1]]
             tasku.remove(sisend[1])
             viskamise_teated = [sisend[1] + " kukkus maha", "Viskasid " + sisend[1] + " minema", sisend[1] + " on nüüd maas", "Loobusid esemest " + sisend[1]]
@@ -221,44 +282,55 @@ def game_brain(sisend):
             looma_teated = [str(sisend[1]) + " sai taskust välja", str(sisend[1]) + " põgenes taskust", str(sisend[1]) + " hüppas vabaks", str(sisend[1]) + " on nüüd vaba"]
             return random.choice(looma_teated)
                     
-    #Tasku vaatamine -------------------------------------------
+    #Tasku vaatamine ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- --------
                     
                     
     elif sisend[0] == "inv":
         if len(tasku) == 0:
             tühi_teated = ["Tasku on tühi.", "Sul pole midagi kaasas.", "Taskud on tühjad.", "Ei leia taskust midagi."]
             return random.choice(tühi_teated)
+        
         else:
             tasku_teated = ["Taskus on " + str(tasku) + ".", "Kaasas on " + str(tasku) + ".", "Leidsid taskust: " + str(tasku), "Sul on kaasas: " + str(tasku)]
             return random.choice(tasku_teated)
                     
-    #püha söömine-------------------------------------------------
+    #püha söömine------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------
     elif sisend[0] == "eat" or sisend[0] == "heal":
+        
         suva = 0
         if sisend[1] == "õun":
             suva = random.randint(5, 30)
             player1 += suva
             tasku.remove(sisend[1])
+            söömise_teated = ["nom nom", "Maitsev!", "See oli hea!", "Kõht sai täis"]
+
         if sisend[1] == "kook":
             suva = random.randint(10, 25)
             player1 += suva
             tasku.remove(sisend[1])
+            söömise_teated = ["nom nom", "Maitsev!", "See oli hea!", "Kõht sai täis"]
+
         if sisend[1] == "seen":
             poises += random.randint(10, 20)
             poiseh += 5
             tasku.remove(sisend[1])
-                
+            söömise_teated = ["nom nom", "Maitsev!", "See oli hea!", "Kõht sai täis"]
+
         if "liha" in sisend[1]:
             suva = random.randint(20, 50)
+            tasku.remove(sisend[1])
+            söömise_teated = ["nom nom", "Maitsev!", "See oli hea!", "Kõht sai täis"]
+        else:
+            söömise_teated = ["See ei kõlba küll süüa", "see ei ole eriti maitsev", "öäk", "See on söömiseks liiga räpane"]
         player1 += suva
-        tasku.remove(sisend[1])
-        
-        söömise_teated = ["nom nom", "Maitsev!", "See oli hea!", "Kõht sai täis"]
         return random.choice(söömise_teated)
+        
+        
+        
                 
                 
-    #elu kontrollimine--------------------------------------------
-    elif sisend[0] == "healt" or sisend[0] == "elud":
+    #elu kontrollimine------------------------------------------------------------------------------------------------------------------------------------------------------------------------ --------
+    elif sisend[0] == "health" or sisend[0] == "elud":
         elu_teated = ["elud: " + str(player1), "Sul on " + str(player1) + " elu", "Tervis: " + str(player1), "Elupunkte: " + str(player1)]
         return random.choice(elu_teated)
 
@@ -266,13 +338,13 @@ def game_brain(sisend):
 
     elif sisend[0] == "look":   
         if koht == mets:
-            metsa_teated = ["Puude vahelt on näha tiik, aas ja põld", "Läbi metsa paistavad tiik, aas ja põld", "Näed kauguses tiiki, aasa ja põldu", "Puude vahelt avanevad vaated tiigile, aasale ja põllule"]
+            metsa_teated = ["Puude vahelt on näha tiik, aas, surnuaed ja põld", "Läbi metsa paistab tiik, surnuaed aas ja põld", "Näed kauguses tiiki, surnuaeda, aasa ja põldu", "Puude vahelt avanevad vaated tiigile, surnuaiale, aasale ja põllule"]
             return random.choice(metsa_teated)
         elif koht == maja:
             maja_teated = ["Näha on aas ja pööning", "Aknast paistab aas, trepist pääseb pööningule", "Vaade aasale, üleval on pööning", "Maja aknast näed aasa, trepid viivad pööningule"]
             return random.choice(maja_teated)
         elif koht == surnuaed:
-            surnuaia_teated = ["Näha on põld ja kirik", "Hauaplatside vahelt paistavad põld ja kirik", "Vaade avaneb põllule ja kirikule", "Surnuaiast näed põldu ja kirikut"]
+            surnuaia_teated = ["Näha on mets ja kirik", "Hauaplatside vahelt paistab mets ja kirik", "Vaade avaneb metsale ja kirikule", "Surnuaiast näed metsa ja kirikut"]
             return random.choice(surnuaia_teated)
         elif koht == tiik:
             tiigi_teated = ["Üle vee on näha aas, põld ja mets", "Tiigi kaldalt paistavad aas, põld ja mets", "Veekogu ümbruses näed aasa, põldu ja metsa", "Tiigi äärest avanevad vaated aasale, põllule ja metsale"]
@@ -281,7 +353,7 @@ def game_brain(sisend):
             aasa_teated = ["Näha on maja, tiik, põld ja mets", "Aasalt paistavad maja, tiik, põld ja mets", "Ümberringi näed maja, tiiki, põldu ja metsa", "Aasalt avanevad vaated majale, tiigile, põllule ja metsale"]
             return random.choice(aasa_teated)
         elif koht == põld:
-            põllu_teated = ["Näha on surnuaed ja mets", "Põllult paistavad surnuaed ja mets", "Vaade avaneb surnuaiale ja metsale", "Põllult näed surnuaeda ja metsa"]
+            põllu_teated = ["Näha on tiik, aas ja mets", "Põllult paistavad tiik, aas ja mets", "Vaade avaneb tiigile, aasale ja metsale", "Põllult näed tiiki, aasa ja metsa"]
             return random.choice(põllu_teated)
         elif koht == kirik:
             kiriku_teated = ["Akendest välja vaadates on näha surnuaeda, sammuti on näha ka sünge trepp sildiga kelder", 
@@ -290,19 +362,22 @@ def game_brain(sisend):
                             "Kirikust paistavad surnuaed ja tume trepikäik keldrisse"]
             return random.choice(kiriku_teated)
         elif koht == kelder:
-            keldri_teated = ["Näha on trepid mis viivad majja", "Trepid suunduvad üles majja", "Keldrist viivad trepid majja", "Pimedast keldrist näed treppe, mis viivad majja"]
+            keldri_teated = ["Näha on trepid mis viivad kiriku", "Trepid suunduvad üles kiriku", "Keldrist viivad trepid kiriku", "Pimedast keldrist näed treppe, mis viivad kiriku"]
             return random.choice(keldri_teated)
         elif koht == pööning:
-            pööningu_teated = ["Näha on trepid mis viivad kirikusse", "Pööningult viivad trepid kirikusse", "Tolmune trepp suundub kirikusse", "Pööningult näed treppe, mis viivad kirikusse"]
+            pööningu_teated = ["Näha on trepid mis viivad majja", "Pööningult viivad trepid majja", "Tolmune trepp suundub majja", "Pööningult näed treppe, mis viivad majja"]
             return random.choice(pööningu_teated)
         else:
             eksimise_teated = ["Sa oled eksinud!", "Ei tea, kus oled!", "See koht on võõras.", "Oled ära eksinud!"]
             return random.choice(eksimise_teated)
+    elif sisend[0] == "weapon":
+        relva_teated = [("Seljal on " + weapon), ("Oled relvastatud" + weapon + "iga")]
+        return random.choice(relva_teated)
                     
     else:
         vea_teated = ["käsku ei leitud.", "Tundmatu käsk.", "Ei saa aru käsust.", "Proovi teist käsku."]
         return random.choice(vea_teated)
-    #errori tapja------------------------------------------------
+    #errori tapja----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -------
         #except Exception as e:
             #print(f"Sisestasit midagi valesti: {e}")
         
@@ -330,7 +405,7 @@ def send_message():
 def on_enter_key(event):
     send_message()
 
-# GUI---------------------------------------------------
+# GUI------------------------------------------------------------------------------------------------------------------------------------------------------------------------- --------------
 
 root = tk.Tk()
 root.title("Rule-Based Chat IDE")
@@ -380,20 +455,20 @@ hint_label = ttk.Label(hint_frame, text="Keywords / Commands:", font=("Arial", 1
 hint_label.pack(pady=(0,10))
 
 # Example keywords
-keywords = ["scan", "inv", "pick <item>", "drop <item>", "look", "go <place>", "shoot <target>", "eat <item>", "healt"]
+keywords = ["scan", "inv", "pick <item>", "drop <item>", "look", "go <place>", "eat <item>", "healt", "atc <target> or attack <target>", "weapon" ]
 
 for kw in keywords:
     kw_label = ttk.Label(hint_frame, text=kw, font=("Arial", 10))
     kw_label.pack(anchor="w")
 
 # Sample rules display (just informational)
-rules_frame = ttk.LabelFrame(hint_frame, text="Sample Rules", padding="5")
-rules_frame.pack(fill="x", pady=10)
+#rules_frame = ttk.LabelFrame(hint_frame, text="Map", padding="5")
+#rules_frame.pack(fill="x", pady=10)
 
-rule1_label = ttk.Label(rules_frame, text='Rule 1: If user says "hello" → respond with greeting.')
-rule1_label.pack(anchor="w")
-rule2_label = ttk.Label(rules_frame, text='Rule 2: If user says "bye" → respond with farewell.')
-rule2_label.pack(anchor="w")
+#rule1_label = ttk.Label(rules_frame, text='Rule 1: If user says "hello" → respond with greeting.')
+#rule1_label.pack(anchor="w")
+#rule2_label = ttk.Label(rules_frame, text='Rule 2: If user says "bye" → respond with farewell.')
+#rule2_label.pack(anchor="w")
 
 # Auto-scroll chat area to bottom when new content is added
 def scroll_to_bottom():
