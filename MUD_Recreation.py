@@ -13,20 +13,28 @@ liblikas = 1
 hiir = 15
 haavatu = 0
 
+
+#world gen pahn
+
+ax = 0 
+aas = [] 
+ese = "" 
+eluka_lisamine = 1
+randomhulk = random.randint(3, 10)
+lisatav = "" 
+
 #kohad-------------------------------------------------------------------------------
 
-
-
-
-maja = ["kook", "õun","hiir", "tool"]
-surnuaed = ["haud", "kont", "kont", "puu"]
-tiik = ["kala", "kala", "kala", "pilliroog" "puhkpüss"]
-mets = ["seen", "puu", "puu", "seen", "kivi", "puu", "nuii"]
-aas = ["lill", "lill", "lill", "seen"]
-põld = ["nisu", "lind", "karu", "nisu", "nisu", "seen"]
-kirik = ["piibel", "küünal", "küünal"]
-kelder = ["luukere", "kett", "kett", "piits", "pealuu", "kont"]
-pööning = ["hallitusseen", "lamp", "kalasnikov","kuulid_x20"]
+maja = []
+surnuaed = []
+tiik = []
+aas = []
+põld = []
+kirik = []
+kelder = []
+pööning = []
+mets = []
+kohad = [maja, surnuaed, tiik, aas, põld, kirik, kelder, pööning, mets]
 
 mindavad_kohad = ["maja", "surnuaed", "tiik", "aas", "põld", "mets"]
 #taskud--------------------------------------
@@ -34,13 +42,9 @@ tasku = []
 liiga_suur_ese = ["karu", "puu", "haud", "kivi", "laud", "luukere"]
 lastavad = ["karu", "hiir", "lind", "lamp"]
 
-
-
-            
 #oluline kraam mis ei sobi kuskile--------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------
 koht = aas
 koht2 = []
-kohad = [maja, surnuaed, tiik, aas, põld, kirik, kelder, pööning, mets]
 suva = 0
 damage = 0
 poise = 0
@@ -50,7 +54,34 @@ weapon = "käed"
 weapons = ["kalasnikov", "puhkpüss", "nuii", "piits" ]
 kordaja = 1
 
+aas_esemed = ["lill", "lill", "lill", "seen", "liblikas", "puu"] 
+põld_esemed = ["nisu", "lind", "karu", "nisu","nisu","kivi", "kivi", "nisu", "nisu", "seen"]
+mets_esemed = ["puu", "puu","kivi", "puu", "kivi", "seen", "seen"]
+maja_esemed = ["kook", "õun","hiir", "tool", "tool", "laud"]
+surnuaed_esemed = ["haud", "kont", "kont", "puu"]
+tiik_esemed = ["kala", "kala", "kala", "pilliroog", "puhkpüss"]
+kelder_esemed = ["luukere", "kett", "kett", "piits", "pealuu", "kont"]
+pööning_esemed = ["hallitusseen", "lamp", "kalasnikov","kuulid_x20"]
+kirik_esemed = ["piibel", "küünal", "küünal"]
 
+esemed_list = [maja_esemed, surnuaed_esemed, tiik_esemed, aas_esemed, põld_esemed, kirik_esemed, kelder_esemed, pööning_esemed, mets_esemed]
+
+for i in range(len(kohad)):
+    ax = 0
+    while ax != randomhulk:
+        random_value = random.randint(0, len(esemed_list[i])-1)
+        ese = esemed_list[i][random_value]
+        
+        if ese in ["liblikas", "karu", "lind", "hiir"] and eluka_lisamine > 0:
+            eluka_lisamine -= 1
+            esemed_list[i].remove(ese)
+        
+        kohad[i].append(ese)
+        ax += 1
+    eluka_lisamine = 1
+
+for item in kohad:
+    print(item)
 
 # Käsud-------------------------------------------._.-------------------------------------------------------------------------------------------------------------------------------------------- --------
 #while True: #kõige süda. (:
