@@ -9,10 +9,15 @@ import random
 player1 = 100
 karu = 150
 lind = 10
+liblikas = 1
 hiir = 15
 haavatu = 0
 
 #kohad-------------------------------------------------------------------------------
+
+
+
+
 maja = ["kook", "õun","hiir", "tool"]
 surnuaed = ["haud", "kont", "kont", "puu"]
 tiik = ["kala", "kala", "kala", "pilliroog" "puhkpüss"]
@@ -26,7 +31,7 @@ pööning = ["hallitusseen", "lamp", "kalasnikov","kuulid_x20"]
 mindavad_kohad = ["maja", "surnuaed", "tiik", "aas", "põld", "mets"]
 #taskud--------------------------------------
 tasku = []
-liiga_suur_ese = ["karu", "puu", "haud", "kivi"]
+liiga_suur_ese = ["karu", "puu", "haud", "kivi", "laud", "luukere"]
 lastavad = ["karu", "hiir", "lind", "lamp"]
 
 
@@ -35,7 +40,7 @@ lastavad = ["karu", "hiir", "lind", "lamp"]
 #oluline kraam mis ei sobi kuskile--------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------
 koht = aas
 koht2 = []
-kohad = [maja, surnuaed, tiik, aas, põld]
+kohad = [maja, surnuaed, tiik, aas, põld, kirik, kelder, pööning, mets]
 suva = 0
 damage = 0
 poise = 0
@@ -54,7 +59,8 @@ kordaja = 1
 #sisend = input(": ")    #Püha algus ksureale
 
 def game_brain(sisend):
-    global player1, karu, lind, hiir, haavatu, koht, tasku, mindavad_kohad, poise, kordaja, poises, poiseh, damage, weapon
+    global player1, karu, lind, hiir, liblikas, haavatu, koht
+    global tasku, mindavad_kohad, poise, kordaja, poises, poiseh, damage, weapon
     global maja, surnuaed, tiik, mets, aas, põld, kirik, kelder, pööning
     
     sisend = sisend.lower()
@@ -356,10 +362,7 @@ def game_brain(sisend):
             põllu_teated = ["Näha on tiik, aas ja mets", "Põllult paistavad tiik, aas ja mets", "Vaade avaneb tiigile, aasale ja metsale", "Põllult näed tiiki, aasa ja metsa"]
             return random.choice(põllu_teated)
         elif koht == kirik:
-            kiriku_teated = ["Akendest välja vaadates on näha surnuaeda, sammuti on näha ka sünge trepp sildiga kelder", 
-                            "Kirikust näed surnuaeda ja treppi keldrisse",
-                            "Vaade avaneb surnuaiale, all on kelder",
-                            "Kirikust paistavad surnuaed ja tume trepikäik keldrisse"]
+            kiriku_teated = ["Akendest välja vaadates on näha surnuaeda, sammuti on näha ka sünge trepp sildiga kelder", "Kirikust näed surnuaeda ja treppi keldrisse", "Vaade avaneb surnuaiale, all on kelder", "Kirikust paistavad surnuaed ja tume trepikäik keldrisse"]
             return random.choice(kiriku_teated)
         elif koht == kelder:
             keldri_teated = ["Näha on trepid mis viivad kiriku", "Trepid suunduvad üles kiriku", "Keldrist viivad trepid kiriku", "Pimedast keldrist näed treppe, mis viivad kiriku"]
@@ -373,7 +376,14 @@ def game_brain(sisend):
     elif sisend[0] == "weapon":
         relva_teated = [("Seljal on " + weapon), ("Oled relvastatud" + weapon + "iga")]
         return random.choice(relva_teated)
-                    
+    elif sisend[0] == "help":
+        return "Ole viimane mängi elus!!"
+    elif sisend[0] == "hi" or sisend[0] == "hello" or sisend[0] == "tere":
+        teretus_teated = ["Tere", "Tere Tere", "Tere tulemast", "Tere tulemast mängu", "HI"]
+        return random.choice(teretus_teated)             
+    elif sisend[0] == "bye" or sisend[0] == "goodbye":
+        saatmis_teated = ["Nägemist!", "Head aega!", "Nägemist, mängija!", "Head aega mängimast!"]
+        return random.choice(saatmis_teated)
     else:
         vea_teated = ["käsku ei leitud.", "Tundmatu käsk.", "Ei saa aru käsust.", "Proovi teist käsku."]
         return random.choice(vea_teated)
@@ -381,6 +391,24 @@ def game_brain(sisend):
         #except Exception as e:
             #print(f"Sisestasit midagi valesti: {e}")
         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def send_message():
     sisend = input_var.get().strip()
@@ -407,13 +435,20 @@ def on_enter_key(event):
 
 # GUI------------------------------------------------------------------------------------------------------------------------------------------------------------------------- --------------
 
+
+
+
+
 root = tk.Tk()
 root.title("Rule-Based Chat IDE")
+
+
 
 # Configure grid layout
 root.rowconfigure(0, weight=1)
 root.columnconfigure(0, weight=1)
 root.columnconfigure(1, weight=0)
+
 
 # Frame for chat area and input
 chat_frame = ttk.Frame(root, padding="10")
