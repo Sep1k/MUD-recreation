@@ -20,7 +20,7 @@ ax = 0
 aas = [] 
 ese = "" 
 eluka_lisamine = 1
-randomhulk = random.randint(3, 10)
+
 lisatav = "" 
 
 #kohad-------------------------------------------------------------------------------
@@ -36,11 +36,11 @@ pööning = []
 mets = []
 kohad = [maja, surnuaed, tiik, aas, põld, kirik, kelder, pööning, mets]
 
-mindavad_kohad = ["maja", "surnuaed", "tiik", "aas", "põld", "mets"]
+mindavad_kohad = ["maja", "surnuaed", "tiik", "aas", "põld", "mets", "kirik", "kelder", "pööning"]
 #taskud--------------------------------------
 tasku = []
 liiga_suur_ese = ["karu", "puu", "haud", "kivi", "laud", "luukere"]
-lastavad = ["karu", "hiir", "lind", "lamp"]
+lastavad = ["karu", "hiir", "lind", "lamp", "liblikas", "kala"]
 
 #oluline kraam mis ei sobi kuskile--------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------
 koht = aas
@@ -67,6 +67,7 @@ kirik_esemed = ["piibel", "küünal", "küünal"]
 esemed_list = [maja_esemed, surnuaed_esemed, tiik_esemed, aas_esemed, põld_esemed, kirik_esemed, kelder_esemed, pööning_esemed, mets_esemed]
 
 for i in range(len(kohad)):
+    randomhulk = random.randint(3, 10)
     ax = 0
     while ax != randomhulk:
         random_value = random.randint(0, len(esemed_list[i])-1)
@@ -103,8 +104,10 @@ def game_brain(sisend):
     if poiseh == 0:
         poises = 0
     
-    if "hiir" in tasku or "lind" in tasku:
-        poise += 5
+    if "hiir" in tasku:
+        poise += 10
+    if "lind" in tasku:
+        poise += 10
     if not poise == 0:
         player1 -= random.randint((poise - 5), (poise + 1))
         if player1 <= 0:
@@ -367,11 +370,11 @@ def game_brain(sisend):
                 
                 
     #elu kontrollimine------------------------------------------------------------------------------------------------------------------------------------------------------------------------ --------
-    elif sisend[0] == "health" or sisend[0] == "elud":
+    elif sisend[0] == "health" or sisend[0] == "elud" or sisend[0] == "hp":
         elu_teated = ["elud: " + str(player1), "Sul on " + str(player1) + " elu", "Tervis: " + str(player1), "Elupunkte: " + str(player1)]
         return random.choice(elu_teated)
 
-    #Vaatamine
+    #Vaatamine------------------------------------------------------------------------------------------------------------------------------------------------------------------------ --------
 
     elif sisend[0] == "look":   
         if koht == mets:
@@ -404,17 +407,32 @@ def game_brain(sisend):
         else:
             eksimise_teated = ["Sa oled eksinud!", "Ei tea, kus oled!", "See koht on võõras.", "Oled ära eksinud!"]
             return random.choice(eksimise_teated)
+    
+    #relva vaatamine------------------------------------------------------------------------------------------------------------------------------------------------------------------------ --------
+    
     elif sisend[0] == "weapon":
         relva_teated = [("Seljal on " + weapon), ("Oled relvastatud" + weapon + "iga")]
         return random.choice(relva_teated)
+    
+    #abikäsk------------------------------------------------------------------------------------------------------------------------------------------------------------------------ --------
+    
     elif sisend[0] == "help":
         return "Ole viimane mängi elus!!"
+    
+    #tere------------------------------------------------------------------------------------------------------------------------------------------------------------------------ --------
+
     elif sisend[0] == "hi" or sisend[0] == "hello" or sisend[0] == "tere":
         teretus_teated = ["Tere", "Tere Tere", "Tere tulemast", "Tere tulemast mängu", "HI"]
         return random.choice(teretus_teated)             
+    
+    #nägemist------------------------------------------------------------------------------------------------------------------------------------------------------------------------ --------
+    
     elif sisend[0] == "bye" or sisend[0] == "goodbye":
         saatmis_teated = ["Nägemist!", "Head aega!", "Nägemist, mängija!", "Head aega mängimast!"]
         return random.choice(saatmis_teated)
+    
+    #käsu eksimine------------------------------------------------------------------------------------------------------------------------------------------------------------------------ --------
+    
     else:
         vea_teated = ["käsku ei leitud.", "Tundmatu käsk.", "Ei saa aru käsust.", "Proovi teist käsku."]
         return random.choice(vea_teated)
@@ -521,7 +539,7 @@ hint_label = ttk.Label(hint_frame, text="Keywords / Commands:", font=("Arial", 1
 hint_label.pack(pady=(0,10))
 
 # Example keywords
-keywords = ["scan", "inv", "pick <item>", "drop <item>", "look", "go <place>", "eat <item>", "healt", "atc <target> or attack <target>", "weapon" ]
+keywords = ["scan", "inv", "pick <item>", "drop <item>", "look", "go <place>", "eat <item>", "health or hp", "atc <target> or attack <target>", "weapon" ]
 
 for kw in keywords:
     kw_label = ttk.Label(hint_frame, text=kw, font=("Arial", 10))
