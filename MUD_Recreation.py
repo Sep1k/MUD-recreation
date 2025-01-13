@@ -53,6 +53,10 @@ poiseh = 0
 weapon = "käed"
 weapons = ["kalasnikov", "puhkpüss", "nuii", "piits" ]
 kordaja = 1
+kord = 0
+relvad = ["kalasnikov", "puhkpüss", "nuii", "piits" ]
+poise_damage = 0
+poise_kordaja = 0
 
 aas_esemed = ["lill", "lill", "lill", "seen", "liblikas", "puu"] 
 põld_esemed = ["nisu", "lind", "karu", "nisu","nisu","kivi", "kivi", "nisu", "nisu", "seen"]
@@ -83,6 +87,14 @@ for i in range(len(kohad)):
 
 for item in kohad:
     print(item)
+for i in kohad:
+    for itam in i:
+        if itam == "kalasnikov" or itam == "puhkpüss":
+            i.append("kuulid_x25")
+            break
+        elif itam == "puhkpüss":
+            i.append("nooled_x10")
+            break
 
 # Käsud-------------------------------------------._.-------------------------------------------------------------------------------------------------------------------------------------------- --------
 #while True: #kõige süda. (:
@@ -91,8 +103,8 @@ for item in kohad:
 #sisend = input(": ")    #Püha algus ksureale
 
 def game_brain(sisend):
-    global player1, karu, lind, hiir, liblikas, haavatu, koht
-    global tasku, mindavad_kohad, poise, kordaja, poises, poiseh, damage, weapon
+    global player1, karu, lind, hiir, liblikas, haavatu, koht, kord, kordaja
+    global tasku, mindavad_kohad, poise, kordaja, poises, poiseh, damage, weapon, poise_damage, poise_kordaja
     global maja, surnuaed, tiik, mets, aas, põld, kirik, kelder, pööning
     
     sisend = sisend.lower()
@@ -193,17 +205,20 @@ def game_brain(sisend):
 
     elif sisend[0] == "atc" or sisend[0] == "attack" or sisend[0] == "shoot":
         arvk = 0
-        if weapon == "käead":
-            damage = 10
+        if weapon == "käed":
+            damage = 1000
             kordaja = 2
+
+
         elif weapon == "kalasnikov":
-            damage = 20
+            damage = 20000
             kordaja = 1
             
             for i, item in enumerate(tasku):
                 if item[:8] == "kuulid_x":
                     tasku[i] = "kuulid_x" + str(int(item[8:]) - 1)
                     arvk = 1  
+                    break
                 
             if "kuulid_x0" in tasku:
                 tasku.remove("kuulid_x0")
@@ -212,40 +227,73 @@ def game_brain(sisend):
                 return random.choice(kuulitu_teated)
                 
         elif weapon == "puhkpüss" or weapon == "poise":
-            damage = 5
-            poises = 15
-            poiseh = 5
+            damage = 5000
+            poise_damage = 15
+            poise_kordaja = 5
+            kordaja = 1
+            for i, item in enumerate(tasku):
+                if item[:8] == "nooled_x":
+                    tasku[i] = "nooled_x" + str(int(item[8:]) - 1)
+                    arvk = 1  
+                    break
+                
+            if "nooled_x0" in tasku:
+                tasku.remove("nooled_x0")
+            if arvk == 0:
+                kuulitu_teated = ["Pole nooli, mida lasta", "nooled puuduvad, mida lasta", "Relv ei tööta"]
+                return random.choice(kuulitu_teated)
         elif weapon == "nuii":
-            damage = 100
+            damage = 1500
             kordaja = 5
+        elif weapon == "piits":
+            damage = 10000
+            kordaja = 3
+
 
         if sisend[1] in koht:
-            if sisend[1] in lastavad:
-                suva = random.randint(1, 9)                                                                  #shoot______________________________
-                if suva == 8:
-                    damage = damage * 2
+            if sisend[1] == "kala" or sisend[1] == "liblikas":
                 
-                if sisend[1] == "karu":
-                    karu -= damage
-                    haavatu = karu
-                        
-                if sisend[1] == "hiir":
-                    hiir -= damage
-                    haavatu = hiir
-                if sisend[1] == "lind":
-                    lind -= damage
-                    haavatu = lind
-                    
-                
-                if haavatu <= 0:
                     koht.append(str(sisend[1]) + "liha")
                     koht.append(sisend[1] + "korjus") 
                     koht.remove(sisend[1])
                     surma_teated = [sisend[1] + " on surnud.", sisend[1] + " langes surnult maha.", "Tabamus oli surmav " + sisend[1] + "-le", sisend[1] + " ei elanud seda üle"]
                     return random.choice(surma_teated)
+                
+            if sisend[1] in lastavad:
+                if kord == 1:
+                    
+                    
+                    suva = random.randint(1, 9)                                                                  #shoot______________________________
+                    if suva == 8:
+                        damage = damage * 2
+                    
+                    if sisend[1] == "karu":
+                        karu -= damage
+                        haavatu = karu
+                            
+                    if sisend[1] == "hiir":
+                        hiir -= damage
+                        haavatu = hiir
+                    if sisend[1] == "lind":
+                        lind -= damage
+                        haavatu = lind
+                        
+                    kord = kordaja  
+
+                    if haavatu <= 0:
+                        koht.append(str(sisend[1]) + "liha")
+                        koht.append(sisend[1] + "korjus") 
+                        koht.remove(sisend[1])
+                        surma_teated = [sisend[1] + " on surnud.", sisend[1] + " langes surnult maha.", "Tabamus oli surmav " + sisend[1] + "-le", sisend[1] + " ei elanud seda üle"]
+                        return random.choice(surma_teated)
+                    else:
+                        haavatud_teated = [str(sisend[1]) + sisend[1] +": müöö", str(sisend[1]) + " karjatas valust", str(sisend[1]) + " sai pihta", str(sisend[1]) + " on haavatud"]
+                        return random.choice(haavatud_teated) 
+                        
+                elif kord > 1:
+                    kord -= 1
                 else:
-                    haavatud_teated = [str(sisend[1]) + ": müöö", str(sisend[1]) + " karjatas valust", str(sisend[1]) + " sai pihta", str(sisend[1]) + " on haavatud"]
-                    return random.choice(haavatud_teated) 
+                    kord = kordaja
         if sisend[1] in koht:  
             elutute_esemete_teated = [sisend[1]+ " on nüüd auk sees", sisend[1] + " on nüüd katki"]
             return random.choice(elutute_esemete_teated)
@@ -255,7 +303,10 @@ def game_brain(sisend):
     #Korjesüsteem---------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------        
 
     elif sisend[0] == "pick":
-        if len(tasku) == 10:
+        if sisend[0] in relvad:
+            relv_taskus = ["Peate vanast relvast loobuma", "Relv on juba olemas", "Peate Relva enne maha viskama"]
+            return random.choice(relv_taskus)
+        elif len(tasku) == 10:
             täis_teated = ["Taskud on täis.", "Ei mahu enam midagi taskusse.", "Sul pole ruumi.", "Tasku ajab üle."]
             return random.choice(täis_teated)
         elif sisend[1] in weapons:
@@ -304,6 +355,7 @@ def game_brain(sisend):
         if sisend[1] in weapons:
             koht += [sisend[1]]
             weapon = "käead"
+            kord = kordaja
             relva_viskamise_teated = ["Pole seda relva enam vaja", "Viskasid " + sisend[1] + " minema", sisend[1] + " on nüüd maas", "Loobusid esemest " + sisend[1]]
             return random.choice(relva_viskamise_teated)
         elif sisend[1] == "nisu" or sisend[1] == "õun" or sisend[1] == "kont" or sisend[1] == "kook" or sisend[1] == "lill": 
