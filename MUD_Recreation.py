@@ -29,9 +29,9 @@ maja = []
 surnuaed = []
 tiik = []
 aas = []
-põld = []
+põld = ["karu"]
 kirik = []
-kelder = []
+kelder = ["piits"]
 pööning = []
 mets = []
 kohad = [maja, surnuaed, tiik, aas, põld, kirik, kelder, pööning, mets]
@@ -57,16 +57,43 @@ kord = 0
 relvad = ["kalasnikov", "puhkpüss", "nuii", "piits" ]
 poise_damage = 0
 poise_kordaja = 0
+karu_olemasolu = 0
+karu_asukoht = "põld"
+player1_asukoht = "aas"
+rünnaku_change = 0
+karu_löök = 0
+karu_kohad = ["põld", "aas", "mets", "tiik"]
+karu_agresiivus = 0
+karu_tegevus = ""
+karu_ränne = 0
+
+#vastase varibled
+
+vastane_asukoht = "kelder"
+vastane_löök = 0
+vastane_agresiivus = 1
+vastane_tegevus = 0
+
+vastane_kohad = 0
 
 aas_esemed = ["lill", "lill", "lill", "seen", "liblikas", "puu"] 
 põld_esemed = ["nisu", "lind", "karu", "nisu","nisu","kivi", "kivi", "nisu", "nisu", "seen"]
-mets_esemed = ["puu", "puu","kivi", "puu", "kivi", "seen", "seen"]
+mets_esemed = ["puu", "puu","kivi", "puu", "kivi", "seen", "seen", "nuii"]
 maja_esemed = ["kook", "õun","hiir", "tool", "tool", "laud"]
 surnuaed_esemed = ["haud", "kont", "kont", "puu"]
-tiik_esemed = ["kala", "kala", "kala", "pilliroog", "puhkpüss"]
+tiik_esemed = ["kala", "kala", "kala", "pilliroog", "puhkpüss", "nooled_x7", "kala", "kala", "kala", "pilliroog", "puhkpüss", "nooled_x8"]
 kelder_esemed = ["luukere", "kett", "kett", "piits", "pealuu", "kont"]
 pööning_esemed = ["hallitusseen", "lamp", "kalasnikov","kuulid_x20"]
 kirik_esemed = ["piibel", "küünal", "küünal"]
+vastase_rännatav_maja = ["aas", "pööning"],
+vastase_rännatav_surnuaed = ["mets", "kirik"],
+vastase_rännatav_tiik = ["tiik", "mets"],
+vastase_rännatav_aas = ["tiik", "maja", "mets", "põld"],
+vastase_rännatav_põld = ["aas", "mets", "tiik"],
+vastase_rännatav_mets = ["surnuaed", "põld", "aas", "tiik"],
+vastase_rännatav_kirik = ["surnuaed", "kelder"],
+vastase_rännatav_kelder = ["kirik"],
+vastase_rännatav_pööning = ["maja"]
 
 esemed_list = [maja_esemed, surnuaed_esemed, tiik_esemed, aas_esemed, põld_esemed, kirik_esemed, kelder_esemed, pööning_esemed, mets_esemed]
 
@@ -95,6 +122,10 @@ for i in kohad:
         elif itam == "puhkpüss":
             i.append("nooled_x10")
             break
+if "karu" in põld:
+    karu_olemasolu = 1
+    print("karu on listis")
+
 
 # Käsud-------------------------------------------._.-------------------------------------------------------------------------------------------------------------------------------------------- --------
 #while True: #kõige süda. (:
@@ -102,18 +133,28 @@ for i in kohad:
     #def käsud(sisend):
 #sisend = input(": ")    #Püha algus ksureale
 
+vastase_mindavad_kohad = vastane_asukoht
+print(vastane_asukoht)
+vastane_ränne = vastase_mindavad_kohad
+
 def game_brain(sisend):
     global player1, karu, lind, hiir, liblikas, haavatu, koht, kord, kordaja
     global tasku, mindavad_kohad, poise, kordaja, poises, poiseh, damage, weapon, poise_damage, poise_kordaja
     global maja, surnuaed, tiik, mets, aas, põld, kirik, kelder, pööning
-    
+    global karu_olemasolu,karu_agresiivus, karu_ränne, karu_asukoht, rünnaku_change, karu_löök, karu_kohad, karu_tegevus, player1_asukoht
+    global vastane_agresiivus, vastane_asukoht, vastane_kohad, vastane_löök, vastane_ränne, vastane_tegevus
+ 
+    karu_tegevus = ""
     sisend = sisend.lower()
     sisend = sisend.split()
+    
+    
     
     if not poiseh == 0:
         poise += poises
         poiseh -= 1
     if poiseh == 0:
+        print("poise")
         poises = 0
     
     if "hiir" in tasku:
@@ -128,9 +169,100 @@ def game_brain(sisend):
         
     poise -= poises
     poise = 0
+# kare möllamine --------------------------------------------------------------------------------------
+
+
+    if karu_olemasolu == 1:
+        print("karu on olemas")
+        if str(player1_asukoht) == str(karu_asukoht):
+            print("player ja karu on samas")
+            rünnaku_change = random.randint(1, 3)
+            print("ründab karu")
+                
+            if rünnaku_change == 2:
+                player1 -= karu_löök 
+                karu_agresiivus = 1
+                karu_tegevus = "Karu ründas teid"
+                    
+            elif rünnaku_change == 1:
+                print("karu on agresiivne")
+                koht.remove(koht[0]) 
+                karu_tegevus = "Karu: Nõm Nõm Nõm"
+                    
+            elif rünnaku_change == 3:
+
+                print("Karu häälitseb") 
+                karu_tegevus = "Karu: möö"
+        if karu_agresiivus == 1:
+            
+            if player1_asukoht == karu_asukoht:
+                print("Karu on agresiivne")
+                karu_löök = random.randint(10, 40)
+                player1 -= karu_löök  
+                
+        karu_ränne = random.randint(1, 20)
+        if karu_ränne == 19:
+            if player1_asukoht == karu_asukoht:
+                print("Karu rändas")
+                rände_suva = random.randint(1, 4)
+                karu_asukoht = karu_kohad[rände_suva - 1]   
+            
+            
+
+# vastane---------------------------------------
+
+    print("vastane on olemas")
+    if str(player1_asukoht) == str(vastane_asukoht):
+        print("player ja vastane on samas")
+        rünnaku_change = random.randint(1, 3)
+        print("ründab vastane")
+                
+        if rünnaku_change == 2:
+            player1 -= vastane_löök 
+            vastane_agresiivus = 1
+            vastane_tegevus = "Vastane ründas teid"
+                    
+        elif rünnaku_change == 1:
+            print("vastane on agresiivne")
+            koht.remove(koht[0]) 
+            vastane_tegevus = "Vastane: korjas üles eseme"
+                    
+        elif rünnaku_change == 3:
+            print("Vastane häälitseb") 
+            vastane_tegevus = "Vastane: möö"
+    if vastane_agresiivus == 1:
+        
+        if player1_asukoht == vastane_asukoht:
+            print("Vastane on agresiivne")
+            vastane_löök = random.randint(10, 20)
+            player1 -= vastane_löök 
+    
+
+                
+    vastane_ränne = random.randint(1, 5)
+    if vastane_ränne == 3:
+        if not player1_asukoht == vastane_asukoht:
+            print("Vastane rändas")
+            rände_suva = random.randint(1, len(vastase_mindavad_kohad))
+            vastane_asukoht = vastane_kohad[rände_suva - 1]
+    vastane_ränne = random.randint(1, 5)
+    if vastane_ränne == 3:
+        if not player1_asukoht == vastane_asukoht:
+            
+            vastane_asukoht.remove[0]
+    
+
+
+            
+
+
+        
+
+
+
 #random message----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- --
     
-    arv = random.randint(1,3)
+    #arv = random.randint(1,3)
 
     
 #ränndamine----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -------------    
@@ -139,54 +271,63 @@ def game_brain(sisend):
             if sisend[1] in mindavad_kohad:
                 koht = maja
                 mindavad_kohad = ["aas", "pööning"]
+                player1_asukoht = str(sisend[1])
                 maja_teated = ["Saabusid majja", "Jõudsid kodusesse majja", "Astusid üle maja läve", "Leidsid tee majja"]
                 return random.choice(maja_teated)
         if sisend[1] == "surnuaed":
             if sisend[1] in mindavad_kohad:
                 koht = surnuaed
                 mindavad_kohad = ["mets", "kirik"]
+                player1_asukoht = str(sisend[1])
                 surnuaia_teated = ["Saabusid surnuaeda", "Jõudsid hauaplatside vahele", "Leidsid end surnuaiast", "Sammud viisid sind surnuaeda"]
                 return random.choice(surnuaia_teated)
         if sisend[1] == "tiik":
             if sisend[1] in mindavad_kohad:
                 koht = tiik
                 mindavad_kohad = ["tiik", "mets"]
+                player1_asukoht = str(sisend[1])
                 tiigi_teated = ["Saabusid tiigi äärde", "Jõudsid veekogu kaldale", "Leidsid end tiigi kaldalt", "Seisad nüüd tiigi ääres"]
                 return random.choice(tiigi_teated)
         if sisend[1] == "aas":
             if sisend[1] in mindavad_kohad:    
                 koht = aas
                 mindavad_kohad = ["tiik", "maja", "mets", "põld"]
+                player1_asukoht = str(sisend[1])
                 aasa_teated = ["Saabusid aasale", "Jõudsid õitsvale aasale", "Leidsid end lilleliselt aasalt", "Sammud viisid sind aasale"]
                 return random.choice(aasa_teated)
         if sisend[1] == "põld":
             if sisend[1] in mindavad_kohad:    
                 koht = põld
                 mindavad_kohad = ["aas", "mets", "tiik"]
+                player1_asukoht = str(sisend[1])
                 põllu_teated = ["Saabusid põllule", "Jõudsid viljapõllule", "Leidsid end põllult", "Seisad nüüd põllul"]
                 return random.choice(põllu_teated)
         if sisend[1] == "mets":
             if sisend[1] in mindavad_kohad: 
                 koht = mets
                 mindavad_kohad = ["surnuaed", "põld", "aas", "tiik"]
+                player1_asukoht = str(sisend[1])
                 metsa_teated = ["Saabusid metsa", "Jõudsid metsasalusse", "Leidsid end metsast", "Puude vahel on nüüd sinu kodu"]
                 return random.choice(metsa_teated)
         if sisend[1] == "kirik":
             if sisend[1] in mindavad_kohad:
                 koht = kirik
                 mindavad_kohad = ["surnuaed", "kelder"]
+                player1_asukoht = str(sisend[1])
                 kiriku_teated = ["Saabusid kirikusse", "Jõudsid püha paika", "Leidsid end kirikust", "Astusid kiriku uksest sisse"]
                 return random.choice(kiriku_teated)
         if sisend[1] == "kelder":
             if sisend[1] in mindavad_kohad:
                 koht = kelder
                 mindavad_kohad = ["kirik"]
+                player1_asukoht = str(sisend[1])
                 keldri_teated = ["Sünge peidetud trepp viis teid keldrisse", "Laskusid mööda treppi keldrisse", "Leidsid end pimedast keldrist", "Oled nüüd keldris"]
                 return random.choice(keldri_teated)
         if sisend[1] == "pööning":
             if sisend[1] in mindavad_kohad:
                 koht = pööning
                 mindavad_kohad = ["maja"]
+                player1_asukoht = str(sisend[1])
                 pööningu_teated = ["Jõudsid redeli kaudu pööningule", "Ronisid üles pööningule", "Leidsid end tolmuselt pööningult", "Oled nüüd pööningul"]
                 return random.choice(pööningu_teated)
         eksimise_teated = ["Sa ei leidnud teed kuhugile!", "Eksinud! Proovi teist teed.", "See tee on suletud.", "Sinna ei saa praegu minna."]
@@ -206,12 +347,12 @@ def game_brain(sisend):
     elif sisend[0] == "atc" or sisend[0] == "attack" or sisend[0] == "shoot":
         arvk = 0
         if weapon == "käed":
-            damage = 1000
+            damage = 10
             kordaja = 2
 
 
         elif weapon == "kalasnikov":
-            damage = 20000
+            damage = 20
             kordaja = 1
             
             for i, item in enumerate(tasku):
@@ -227,7 +368,7 @@ def game_brain(sisend):
                 return random.choice(kuulitu_teated)
                 
         elif weapon == "puhkpüss" or weapon == "poise":
-            damage = 5000
+            damage = 5
             poise_damage = 15
             poise_kordaja = 5
             kordaja = 1
@@ -243,10 +384,10 @@ def game_brain(sisend):
                 kuulitu_teated = ["Pole nooli, mida lasta", "nooled puuduvad, mida lasta", "Relv ei tööta"]
                 return random.choice(kuulitu_teated)
         elif weapon == "nuii":
-            damage = 1500
+            damage = 150
             kordaja = 5
         elif weapon == "piits":
-            damage = 10000
+            damage = 75
             kordaja = 3
 
 
@@ -268,6 +409,7 @@ def game_brain(sisend):
                         damage = damage * 2
                     
                     if sisend[1] == "karu":
+                        karu_agresiivus = 1
                         karu -= damage
                         haavatu = karu
                             
@@ -284,6 +426,8 @@ def game_brain(sisend):
                         koht.append(str(sisend[1]) + "liha")
                         koht.append(sisend[1] + "korjus") 
                         koht.remove(sisend[1])
+                        if sisend[1] == "karu":
+                            karu_olemasolu = 0
                         surma_teated = [sisend[1] + " on surnud.", sisend[1] + " langes surnult maha.", "Tabamus oli surmav " + sisend[1] + "-le", sisend[1] + " ei elanud seda üle"]
                         return random.choice(surma_teated)
                     else:
@@ -488,6 +632,7 @@ def game_brain(sisend):
     else:
         vea_teated = ["käsku ei leitud.", "Tundmatu käsk.", "Ei saa aru käsust.", "Proovi teist käsku."]
         return random.choice(vea_teated)
+    
     #errori tapja----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -------
         #except Exception as e:
             #print(f"Sisestasit midagi valesti: {e}")
@@ -512,24 +657,33 @@ def game_brain(sisend):
 
 
 def send_message():
-    sisend = input_var.get().strip()
-    if sisend:
-        # Display user message in chat area
+    sisend = input_var.get().strip()  # Get and strip input text
+
+    if sisend:  # Only proceed if input is not empty
+        # Display the user message in the chat area
         chat_area.config(state='normal')
         chat_area.insert(tk.END, f" {sisend}\n", "user_tag")
-        chat_area.config(state='disabled')
         
-        # Clear input field
+        # If the bear is active, display the bear's action/response
+        if not karu_tegevus == "":
+            chat_area.insert(tk.END, f"{karu_tegevus}\n", "karu_tegevus")  # You can add a special tag for the bear's message
+        chat_area.config(state='disabled')
+
+        # Clear the input field after sending
         input_var.set("")
 
-        # Get reply from the game_brain function
+        # Get the bot's reply from the game_brain function
         reply = game_brain(sisend)
 
-        # Display reply in chat area
+        # Display the bot's reply in the chat area
         chat_area.config(state='normal')
         chat_area.insert(tk.END, f" {reply}\n", "bot_tag")
         chat_area.config(state='disabled')
+
+        # Scroll to the bottom of the chat area (if needed)
         scroll_to_bottom()
+
+
         
 def on_enter_key(event):
     send_message()
@@ -597,14 +751,14 @@ for kw in keywords:
     kw_label = ttk.Label(hint_frame, text=kw, font=("Arial", 10))
     kw_label.pack(anchor="w")
 
-# Sample rules display (just informational)
-#rules_frame = ttk.LabelFrame(hint_frame, text="Map", padding="5")
-#rules_frame.pack(fill="x", pady=10)
+#Sample rules display (just informational)
+rules_frame = ttk.LabelFrame(hint_frame, text="goals", padding="5")
+rules_frame.pack(fill="x", pady=10)
 
-#rule1_label = ttk.Label(rules_frame, text='Rule 1: If user says "hello" → respond with greeting.')
-#rule1_label.pack(anchor="w")
-#rule2_label = ttk.Label(rules_frame, text='Rule 2: If user says "bye" → respond with farewell.')
-#rule2_label.pack(anchor="w")
+rule1_label = ttk.Label(rules_frame, text='Kill Vastane!')
+rule1_label.pack(anchor="w")
+rule2_label = ttk.Label(rules_frame, text='Have fun!')
+rule2_label.pack(anchor="w")
 
 # Auto-scroll chat area to bottom when new content is added
 def scroll_to_bottom():
