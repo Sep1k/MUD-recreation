@@ -31,12 +31,12 @@ tiik = []
 aas = []
 põld = ["karu"]
 kirik = []
-kelder = ["piits"]
+kelder = ["vastane", "piits", ]
 pööning = []
 mets = []
 kohad = [maja, surnuaed, tiik, aas, põld, kirik, kelder, pööning, mets]
 
-mindavad_kohad = ["maja", "surnuaed", "tiik", "aas", "põld", "mets", "kirik", "kelder", "pööning"]
+mindavad_kohad = ["maja", "tiik", "põld", "mets"]
 #taskud--------------------------------------
 tasku = []
 liiga_suur_ese = ["karu", "puu", "haud", "kivi", "laud", "luukere"]
@@ -85,6 +85,8 @@ tiik_esemed = ["kala", "kala", "kala", "pilliroog", "puhkpüss", "nooled_x7", "k
 kelder_esemed = ["luukere", "kett", "kett", "piits", "pealuu", "kont"]
 pööning_esemed = ["hallitusseen", "lamp", "kalasnikov","kuulid_x20"]
 kirik_esemed = ["piibel", "küünal", "küünal"]
+
+
 vastase_rännatav_maja = ["aas", "pööning"],
 vastase_rännatav_surnuaed = ["mets", "kirik"],
 vastase_rännatav_tiik = ["tiik", "mets"],
@@ -185,9 +187,10 @@ def game_brain(sisend):
                 karu_tegevus = "Karu ründas teid"
                     
             elif rünnaku_change == 1:
-                print("karu on agresiivne")
-                koht.remove(koht[0]) 
-                karu_tegevus = "Karu: Nõm Nõm Nõm"
+                if not len(karu_asukoht) == 1:
+                    print("karu on agresiivne")
+                    koht.remove(koht[1]) 
+                    karu_tegevus = "Karu: Nõm Nõm Nõm"
                     
             elif rünnaku_change == 3:
 
@@ -214,18 +217,19 @@ def game_brain(sisend):
     print("vastane on olemas")
     if str(player1_asukoht) == str(vastane_asukoht):
         print("player ja vastane on samas")
-        rünnaku_change = random.randint(1, 3)
+        rünnaku_change = random.randint(1, 2)
         print("ründab vastane")
-                
+        vastane_löök = random.randint(10, 12)
         if rünnaku_change == 2:
             player1 -= vastane_löök 
             vastane_agresiivus = 1
             vastane_tegevus = "Vastane ründas teid"
                     
         elif rünnaku_change == 1:
-            print("vastane on agresiivne")
-            koht.remove(koht[0]) 
-            vastane_tegevus = "Vastane: korjas üles eseme"
+            if not len(vastane_asukoht) == 1:
+                print("vastane on agresiivne")
+                koht.remove(koht[0]) 
+                vastane_tegevus = "Vastane: korjas üles eseme"
                     
         elif rünnaku_change == 3:
             print("Vastane häälitseb") 
@@ -240,18 +244,39 @@ def game_brain(sisend):
 
                 
     vastane_ränne = random.randint(1, 5)
+    if vastane_asukoht == aas:
+        vastane_kohad == vastase_rännatav_aas
+    elif vastane_asukoht == maja:
+        vastane_kohad == vastase_rännatav_maja
+    elif vastane_asukoht == mets:
+        vastane_kohad == vastase_rännatav_tiik
+    elif vastane_asukoht == põld:
+        vastane_kohad == vastase_rännatav_põld
+    elif vastane_asukoht == tiik:
+        vastane_kohad == vastase_rännatav_tiik
+    elif vastane_asukoht == pööning:
+        vastane_kohad == vastase_rännatav_pööning
+    elif vastane_asukoht == kirik:
+        vastane_kohad == vastase_rännatav_kirik
+    elif vastane_asukoht == kelder:
+        vastane_kohad == vastase_rännatav_kelder
+    elif vastane_asukoht == surnuaed:
+        vastane_kohad == vastase_rännatav_surnuaed
+    
     if vastane_ränne == 3:
         if not player1_asukoht == vastane_asukoht:
             print("Vastane rändas")
             rände_suva = random.randint(1, len(vastase_mindavad_kohad))
-            vastane_asukoht = vastane_kohad[rände_suva - 1]
+            vastane_asukoht = vastane_kohad[int(rände_suva - 1)]
+            vastane_asukoht += "vastane"
+            vastane_asukoht.remove("vastane")
     vastane_ränne = random.randint(1, 5)
     if vastane_ränne == 3:
         if not player1_asukoht == vastane_asukoht:
             
             vastane_asukoht.remove[0]
     
-
+    #if vastane =
 
             
 
