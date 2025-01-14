@@ -36,6 +36,7 @@ kelder = ["vastane", "piits", ]
 pööning = []
 mets = []
 kohad = [maja, surnuaed, tiik, aas, põld, kirik, kelder, pööning, mets]
+koha_nimed = ["maja", "surnuaed", "tiik", "aas", "põld", "kirik", "kelder", "pööning", "mets"]
 
 mindavad_kohad = ["maja", "tiik", "põld", "mets"]
 #taskud--------------------------------------
@@ -59,7 +60,7 @@ relvad = ["kalasnikov", "puhkpüss", "nuii", "piits" ]
 poise_damage = 0
 poise_kordaja = 0
 karu_olemasolu = 0
-karu_asukoht = "põld"
+karu_asukoht = põld
 player1_asukoht = "aas"
 rünnaku_change = 0
 karu_löök = 0
@@ -75,7 +76,7 @@ vastane_löök = 0
 vastane_agresiivus = 1
 vastane_tegevus = 0
 
-vastane_kohad = 0
+vastane_kohad = []
 
 aas_esemed = ["lill", "lill", "lill", "seen", "liblikas", "puu"] 
 põld_esemed = ["nisu", "lind", "karu", "nisu","nisu","kivi", "kivi", "nisu", "nisu", "seen"]
@@ -86,17 +87,6 @@ tiik_esemed = ["kala", "kala", "kala", "pilliroog", "puhkpüss", "nooled_x7", "k
 kelder_esemed = ["luukere", "kett", "kett", "piits", "pealuu", "kont"]
 pööning_esemed = ["hallitusseen", "lamp", "kalasnikov","kuulid_x20"]
 kirik_esemed = ["piibel", "küünal", "küünal"]
-
-
-vastase_rännatav_maja = ["aas", "pööning"],
-vastase_rännatav_surnuaed = ["mets", "kirik"],
-vastase_rännatav_tiik = ["tiik", "mets"],
-vastase_rännatav_aas = ["tiik", "maja", "mets", "põld"],
-vastase_rännatav_põld = ["aas", "mets", "tiik"],
-vastase_rännatav_mets = ["surnuaed", "põld", "aas", "tiik"],
-vastase_rännatav_kirik = ["surnuaed", "kelder"],
-vastase_rännatav_kelder = ["kirik"],
-vastase_rännatav_pööning = ["maja"]
 
 esemed_list = [maja_esemed, surnuaed_esemed, tiik_esemed, aas_esemed, põld_esemed, kirik_esemed, kelder_esemed, pööning_esemed, mets_esemed]
 
@@ -136,7 +126,7 @@ if "karu" in põld:
     #def käsud(sisend):
 #sisend = input(": ")    #Püha algus ksureale
 
-vastase_mindavad_kohad = vastane_asukoht
+vastase_mindavad_kohad = []
 print(vastane_asukoht)
 vastane_ränne = vastase_mindavad_kohad
 
@@ -150,11 +140,11 @@ def game_brain(sisend):
 
     if vastane <= 0:
         return "MÄNG ON LÄBI, TE VÕITSITE!!!!"
+    if player1 <= 0:
+        return "MÄNG ON LÄBI, TE KAOTASITE!!!!"
     karu_tegevus = ""
     sisend = sisend.lower()
     sisend = sisend.split()
-    
-    
     
     if not poiseh == 0:
         poise += poises
@@ -167,7 +157,7 @@ def game_brain(sisend):
         poise += 10
     if "lind" in tasku:
         poise += 10
-    if not poise == 0:
+    if poise > 0:
         player1 -= random.randint((poise - 5), (poise + 1))
         if player1 <= 0:
             surma_teated = ["Sa oled kutu", "Sinu teekond on lõppenud", "Surm võttis sind oma embusse", "Game Over"]
@@ -175,74 +165,67 @@ def game_brain(sisend):
         
     poise -= poises
     poise = 0
-# kare möllamine --------------------------------------------------------------------------------------
 
+# karu möllamine --------------------------------------------------------------------------------------
 
     if karu_olemasolu == 1:
         rünnaku_change = random.randint(1, 5)
         print("karu on olemas")
-        if not str(player1_asukoht) == str(karu_asukoht):
-            print("player ja karu on samas")
+        if str(player1_asukoht) == str(karu_asukoht):
+            print(" player ja karu on samas")
             
-            print("ründab karu")
+            print(" ründab karu")
                 
-            #if rünnaku_change == 2:
-            #    player1 -= karu_löök 
-            #    karu_agresiivus = 1
-            #    karu_tegevus = "Karu ründas teid"
+            if rünnaku_change == 1 and len(koht) > 1:
+                print(" Karu sõi")
+                koht.pop(1)
+                if karu_asukoht == player1_asukoht:
+                    karu_tegevus = " Karu: Nõm Nõm Nõm"
                     
-            if rünnaku_change == 1 :
-                if not len(karu_asukoht) == 1:
-                    print("Karu sõi")
-                    koht.remove(koht[1]) 
-                    if str(karu_asukoht) == str(player1_asukoht):
-                        karu_tegevus = "Karu: Nõm Nõm Nõm"
-                    
-            #elif rünnaku_change == 3:
-
-            #    print("Karu häälitseb") 
-            #    if str(karu_asukoht) == str(player1_asukoht):
-            #        karu_tegevus = "Karu: möö"
-            karu_ränne = random.randint(1, 20)
-            if karu_ränne == 19:
-
-                karu_asukoht.remove("karu")
-                rände_suva = random.randint(1, 4)
-                karu_asukoht = karu_kohad[rände_suva - 1]
-                karu_asukoht.append("karu")
-                if player1_asukoht == karu_asukoht:
-                    karu_tegevus = "Karu põgenes"
-                    print("Karu põgenes")
-                    
-        if karu_agresiivus == 1:
-
-            
-            if str(player1_asukoht) == str(karu_asukoht):
-                print("Karu on agresiivne")
-                karu_löök = random.randint(10, 40)
-                player1 -= karu_löök
-                karu_ründe_teated = ["karu ründas teid", "Karu on agresiivne teie vastu", "Karu: Möah"]
-                karu_tegevus =  str(random.choice(karu_ründe_teated))
-        elif str(player1_asukoht) == str(karu_asukoht):
-            if rünnaku_change == 3:
+            elif rünnaku_change == 3:
                 print("Karu häälitseb") 
-                if str(karu_asukoht) == str(player1_asukoht):
-                    karu_tegevus = "Karu: möö"
+                if karu_asukoht == player1_asukoht:
+                    karu_tegevus = " Karu: möö"
 
-                
-        
-        elif karu_ränne == 19:
-            karu_ränne = random.randint(1, 20)
+        karu_ränne = random.randint(1, 20)
+        if karu_ränne == 19:
+            print(karu_asukoht)
+            print("karu rändas")
+            
+            # Remove karu from old location
+            if isinstance(karu_asukoht, list):
+                karu_asukoht.remove("karu")
+            
+            # Choose new location and add karu
+            karu_minek = random.choice(karu_kohad)
+            if karu_minek == "põld":
+                põld.append("karu")
+                karu_asukoht = põld
+            elif karu_minek == "aas":
+                aas.append("karu") 
+                karu_asukoht = aas
+            elif karu_minek == "mets":
+                mets.append("karu")
+                karu_asukoht = mets
+            elif karu_minek == "tiik":
+                tiik.append("karu")
+                karu_asukoht = tiik
+
             if player1_asukoht == karu_asukoht:
-                print("Karu rändas")
-                rände_suva = random.randint(1, 4)
-                karu_asukoht = karu_kohad[rände_suva - 1]   
+                karu_tegevus = " Karu põgenes"
+                print("Karu põgenes")
+                    
+        if karu_agresiivus == 1 and str(player1_asukoht) == str(karu_asukoht):
+            print("Karu on agresiivne")
+            karu_löök = random.randint(10, 40)
+            player1 -= karu_löök
             
-            
+            if karu_asukoht == player1_asukoht:
+                karu_ründe_teated = [" karu ründas teid", " Karu on agresiivne teie vastu", " Karu: Möah"]
+                karu_tegevus = random.choice(karu_ründe_teated)
 
 # vastane---------------------------------------
 
-    
     if str(player1_asukoht) == str(vastane_asukoht):
         print("player ja vastane on samas")
         rünnaku_change = random.randint(1, 2)
@@ -253,73 +236,45 @@ def game_brain(sisend):
             vastane_agresiivus = 1
             vastane_tegevus = "Vastane ründas teid"
                     
-        elif rünnaku_change == 1:
-            if not len(vastane_asukoht) == 1:
-                print("vastane on agresiivne")
-                koht.remove(koht[0]) 
-                vastane_tegevus = "Vastane: korjas üles eseme"
-                    
-        elif rünnaku_change == 3:
-            print("Vastane häälitseb") 
-            vastane_tegevus = "Vastane: möö"
-    if vastane_agresiivus == 1:
+        elif rünnaku_change == 1 and len(koht) > 0:
+            print("vastane korjab")
+            koht.pop(0)
+            vastane_tegevus = "Vastane: korjas üles eseme"
+    
+    if vastane_agresiivus >= 1 and str(player1_asukoht) == str(vastane_asukoht):
+        print("Vastane on agresiivne")
+        vastane_löök = random.randint(5 * vastane_agresiivus, 10 * vastane_agresiivus)
+        player1 -= vastane_löök
         
-        if player1_asukoht == vastane_asukoht:
-            print("Vastane on agresiivne")
-            vastane_löök = random.randint(10, 20)
-            player1 -= vastane_löök 
-    if not str(player1_asukoht) == str(vastane_asukoht):
+    if str(player1_asukoht) != str(vastane_asukoht):
         v_heal = random.randint(1,6)
-        if v_heal == 1 or v_heal == 3:
+        if v_heal in [1, 3]:
             vh = random.randint(10,25)
             vastane += vh
-        if v_heal == 2:
-            koht.remove(vastane_asukoht[0]) 
-            vastane_tegevus = "Vastane: korjas üles eseme"
-
-
-    
-
-                
+            
     vastane_ränne = random.randint(1, 5)
-    if vastane_asukoht == aas:
-        vastane_kohad == vastase_rännatav_aas
-    elif vastane_asukoht == maja:
-        vastane_kohad == vastase_rännatav_maja
-    elif vastane_asukoht == mets:
-        vastane_kohad == vastase_rännatav_tiik
-    elif vastane_asukoht == põld:
-        vastane_kohad == vastase_rännatav_põld
-    elif vastane_asukoht == tiik:
-        vastane_kohad == vastase_rännatav_tiik
-    elif vastane_asukoht == pööning:
-        vastane_kohad == vastase_rännatav_pööning
-    elif vastane_asukoht == kirik:
-        vastane_kohad == vastase_rännatav_kirik
-    elif vastane_asukoht == kelder:
-        vastane_kohad == vastase_rännatav_kelder
-    elif vastane_asukoht == surnuaed:
-        vastane_kohad == vastase_rännatav_surnuaed
-    
     if vastane_ränne == 3:
-        if not player1_asukoht == vastane_asukoht:
+        if str(player1_asukoht) != str(vastane_asukoht):
             print("Vastane rändas")
-            rände_suva = random.randint(1, len(vastase_mindavad_kohad))
-            vastane_asukoht = vastane_kohad[int(rände_suva - 1)]
-            vastane_asukoht += "vastane"
-            vastane_asukoht.remove("vastane")
-    vastane_ränne = random.randint(1, 5)
-    if vastane_ränne == 3:
-        if not player1_asukoht == vastane_asukoht:
             
-            vastane_asukoht.remove[0]
-    
-    #if vastane =
-
+            # Get current location list based on vastane_asukoht
+            current_list = None
+            for i, name in enumerate(koha_nimed):
+                if name == vastane_asukoht:
+                    current_list = kohad[i]
+                    break
             
-
-
-        
+            if current_list and "vastane" in current_list:
+                current_list.remove("vastane")
+            
+            # Choose random new location
+            vastane_asukoht = random.choice(koha_nimed)
+            
+            # Add vastane to new location list
+            for i, name in enumerate(koha_nimed):
+                if name == vastane_asukoht:
+                    kohad[i].append("vastane")
+                    break
 
 
 
@@ -482,6 +437,10 @@ def game_brain(sisend):
                     if sisend[1] == "lind":
                         lind -= damage
                         haavatu = lind
+                    if sisend[1] == "vastane":
+                        vastane_agresiivus = 2
+                        vastane -= damage
+                        haavatu = vastane
                         
                     kord = kordaja  
 
