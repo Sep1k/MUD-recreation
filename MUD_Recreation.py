@@ -6,7 +6,7 @@ import random
 
 
 #elusolendid-------------------------------------------------------------------------
-player1 = 100
+player1 = 200
 karu = 150
 lind = 10
 liblikas = 1
