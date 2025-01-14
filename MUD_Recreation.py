@@ -42,7 +42,7 @@ mindavad_kohad = ["maja", "tiik", "põld", "mets"]
 #taskud--------------------------------------
 tasku = []
 liiga_suur_ese = ["karu", "puu", "haud", "kivi", "laud", "luukere"]
-lastavad = ["karu", "hiir", "lind", "lamp", "liblikas", "kala"]
+lastavad = ["karu", "hiir", "lind", "lamp", "liblikas", "kala", "vastane"]
 
 #oluline kraam mis ei sobi kuskile--------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------
 koht = aas
@@ -131,12 +131,13 @@ print(vastane_asukoht)
 vastane_ränne = vastase_mindavad_kohad
 
 def game_brain(sisend):
+    
     global player1, karu, lind, hiir, liblikas, haavatu, koht, kord, kordaja, vastane
     global tasku, mindavad_kohad, poise, kordaja, poises, poiseh, damage, weapon, poise_damage, poise_kordaja
     global maja, surnuaed, tiik, mets, aas, põld, kirik, kelder, pööning
     global karu_olemasolu,karu_agresiivus, karu_ränne, karu_asukoht, rünnaku_change, karu_löök, karu_kohad, karu_tegevus, player1_asukoht
     global vastane_agresiivus, vastane_asukoht, vastane_kohad, vastane_löök, vastane_ränne, vastane_tegevus
- 
+    print(vastane)
 
     if vastane <= 0:
         return "MÄNG ON LÄBI, TE VÕITSITE!!!!"
@@ -247,11 +248,12 @@ def game_brain(sisend):
         player1 -= vastane_löök
         
     if str(player1_asukoht) != str(vastane_asukoht):
-        v_heal = random.randint(1,6)
-        if v_heal in [1, 3]:
-            vh = random.randint(10,25)
-            vastane += vh
-            
+        if not vastane >= 100:
+            v_heal = random.randint(1,6)
+            if v_heal in [1, 3]:
+                vh = random.randint(10,)
+                vastane += vh
+                
     vastane_ränne = random.randint(1, 5)
     if vastane_ränne == 3:
         if str(player1_asukoht) != str(vastane_asukoht):
