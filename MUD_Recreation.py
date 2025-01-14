@@ -6,7 +6,7 @@ import random
 
 
 #elusolendid-------------------------------------------------------------------------
-player1 = 200
+player1 = 100
 karu = 150
 lind = 10
 liblikas = 1
@@ -779,7 +779,7 @@ rules_frame.pack(fill="x", pady=10)
 
 rule1_label = ttk.Label(rules_frame, text='Kill Vastane!')
 rule1_label.pack(anchor="w")
-rule2_label = ttk.Label(rules_frame, text='Have fun!')
+rule2_label = ttk.Label(rules_frame, text='controll your surraundings with commands and make sure you are safe!')
 rule2_label.pack(anchor="w")
 
 # Auto-scroll chat area to bottom when new content is added
@@ -790,3 +790,4 @@ def scroll_to_bottom():
 # Set up the main event loop
 root.mainloop()
 
+#Kana
